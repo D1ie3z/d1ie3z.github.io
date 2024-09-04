@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D1ie3z OPERATING SYSTEM</title>
+    <!-- Enlace a una fuente retro tipo pixel -->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" href="10.ico" type="image/x-icon">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive; /* Fuente estilo retro */
+            background-color: #0000FF;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            animation: glitch-background 8s infinite;
+        }
+
+        /* Efecto glitch del fondo */
+        @keyframes glitch-background {
+            0%, 98% {
+                background-image: url('background1.png');
+            }
+            98.5%, 99% {
+                background-image: url('glitcho.jpg');
+            }
+            99.5%, 100% {
+                background-image: url('tv.jpg');
+            }
+        }
+
+        /* Barra de navegación */
+        nav {
+            background-color: #000;
+            color: #00FF00;
+            width: 100%;
+            padding: 10px;
+            position: absolute;
+            top: 0;
+            text-align: center;
+        }
+
+        nav a {
+            color: #00FF00;
+            margin: 0 15px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: #00FF88;
+        }
+
+        /* Efecto glitch para el nav */
+        .glitch {
+            animation: glitch 0.3s steps(5, jump-none) infinite;
+        }
+
+        @keyframes glitch {
+            0% {
+                transform: translate(2px, 2px);
+            }
+            20% {
+                transform: translate(-2px, -2px);
+            }
+            40% {
+                transform: translate(1px, -1px);
+            }
+            60% {
+                transform: translate(-1px, 1px);
+            }
+            80% {
+                transform: translate(2px, 1px);
+            }
+            100% {
+                transform: translate(0px, 0px);
+            }
+        }
+
+        /* Ventana estilo Windows XP */
+        .window {
+            width: 90%;
+            max-width: 350px;
+            background-color: #C0C0C0;
+            border: 2px solid #000080;
+            padding: 10px;
+            position: absolute;
+            top: 120px;
+            color: black;
+            z-index: 1000;
+        }
+
+        .window-header {
+            background-color: #000080;
+            color: white;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Hacer que el texto parpadee */
+        .blinking {
+            animation: blinkingText 1.5s infinite;
+        }
+
+        @keyframes blinkingText {
+            0% { color: #FF0000; }
+            50% { color: #FFFFFF; }
+            100% { color: #FF0000; }
+        }
+
+        .window-header span {
+            font-weight: bold;
+        }
+
+        .close-btn {
+            background-color: #FF0000;
+            width: 20px;
+            height: 20px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-weight: bold;
+        }
+
+        .window-content {
+            padding: 10px;
+            background-color: #C0C0C0;
+            color: black;
+            text-align: center;
+        }
+
+        .window-content p {
+            font-size: 14px;
+        }
+
+        .window-content img {
+            width: 100%;
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .action-button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #000080;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Estilos del personaje en la esquina */
+        .character {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 50px;
+            height: auto;
+        }
+
+        /* Pantalla de carga */
+        #loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0000FF;
+            color: #00FF00;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 14px;
+            z-index: 9999;
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        #loading-text {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de carga -->
+    <div id="loading-screen">
+        <div id="loading-text">LOADING EXPERIENCE</div>
+        <div id="loading-messages"></div>
+    </div>
+
+    <!-- Barra de navegación -->
+    <nav id="main-nav" style="display: none;">
+        <a id="nav-home">H0ME</a>
+        <a id="nav-blog">BL0G</a>
+        <a href="login.html" id="nav-poc">P0C</a>
+    </nav>
+
+    <!-- Ventana principal estilo D1ie3z BOTNET -->
+    <div class="window" id="main-window" style="display: none;">
+        <div class="window-header">
+            <span>D1ie3z - d3sKt0p</span>
+            <button class="close-btn" onclick="handleMainWindowClose()">X</button>
+        </div>
+        <div class="window-content">
+            <div class="icons">
+                <p>Nothing to see here just close this window.</p>
+                <img src="10.jpeg" alt="Icon Image">
+		<p>Info: Just a random one who loves hacking stuff and has some pay harder certs</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script para manejo de ventanas, efectos y pantalla de carga -->
+    <script>
+        let popupSequence = 0; // Variable para rastrear la secuencia de ventanas
+
+        // Diferentes imágenes para cada ventana
+        const popupImages = [
+            'elon.jpeg',
+            'monkey-mono.gif',
+            'winnie.gif',
+            'virus.gif'
+        ];
+	//WHAT
+	function showWarningWindow() {
+    	    const newWindow = document.createElement('div');
+   	    newWindow.classList.add('window');
+
+    	    newWindow.innerHTML = `
+        	<div class="window-header">
+            	<span>Warning</span>
+            	<button class="close-btn" onclick="this.parentElement.parentElement.remove()">X</button>
+        	</div>
+        	<div class="window-content">
+            	<p>You shouldn't be here!</p>
+        	</div>
+    	    `;
+
+    	    const randomTop = Math.floor(Math.random() * (window.innerHeight - 200)) + 'px';
+    	    const randomLeft = Math.floor(Math.random() * (window.innerWidth - 350)) + 'px';
+    	    newWindow.style.top = randomTop;
+    	    newWindow.style.left = randomLeft;
+
+    	    document.body.appendChild(newWindow);
+	}
+
+
+        // Función para cerrar el popup y abrir otro
+        function closePopup() {
+            const popupWindows = document.getElementsByClassName('window');
+            if (popupWindows.length > 0) {
+                popupWindows[popupWindows.length - 1].remove(); // Cerrar la última ventana abierta
+            }
+
+            // Verificar la secuencia de ventanas
+            if (popupSequence === 0) {
+                openPopup('OMG I did not know that you skate', 'Look how cute you are!', true, true, popupImages[1]);
+                popupSequence++;
+            } else if (popupSequence === 1) {
+                openPopup('Chill I am using the web!', 'Me when I see your huge ass!', true, true, popupImages[2]);
+                popupSequence++;
+            } else if (popupSequence === 2) {
+                openPopup('GET YOUR FREE MALWARE', 'This is my gift to you :)', true, true, popupImages[3]);
+                popupSequence++;
+            } else if (popupSequence === 3) {
+                downloadAsciiArt(); // Esto dispara la descarga del archivo ASCII
+            }
+        }
+
+        // Función para abrir una nueva ventana estilo Windows XP
+        function openPopup(title, content, showInput, blinkingText, image) {
+            const newWindow = document.createElement('div');
+            newWindow.classList.add('window');
+            
+            let inputFields = '';
+            if (showInput) {
+                inputFields = `
+                    <div>
+                        <input type="text" placeholder="Enter your details here" style="width: 80%; margin: 5px 0;">
+                    </div>
+                `;
+            }
+
+            // Añadir la clase blinking si se pasa el parámetro blinkingText como verdadero
+            const textClass = blinkingText ? 'blinking' : '';
+
+            newWindow.innerHTML = `
+                <div class="window-header">
+                    <span>${title}</span>
+                    <button class="close-btn" onclick="closePopup()">X</button>
+                </div>
+                <div class="window-content">
+                    <img src="${image}" alt="${title}">
+                    <p class="${textClass}">${content}</p>
+                    ${inputFields}
+                </div>
+            `;
+
+            const randomTop = Math.floor(Math.random() * (window.innerHeight - 200)) + 'px';
+            const randomLeft = Math.floor(Math.random() * (window.innerWidth - 350)) + 'px';
+            newWindow.style.top = randomTop;
+            newWindow.style.left = randomLeft;
+
+            document.body.appendChild(newWindow);
+        }
+
+        // Función para descargar el ASCII Art
+        function downloadAsciiArt() {
+            const asciiArt = `
+ █████       ██████  ██ ███████ ████████     ███████ ██████   ██████  ███    ███      ██  ██████  
+██   ██     ██       ██ ██         ██        ██      ██   ██ ██    ██ ████  ████     ███ ██  ████ 
+███████     ██   ███ ██ █████      ██        █████   ██████  ██    ██ ██ ████ ██      ██ ██ ██ ██ 
+██   ██     ██    ██ ██ ██         ██        ██      ██   ██ ██    ██ ██  ██  ██      ██ ████  ██ 
+██   ██      ██████  ██ ██         ██        ██      ██   ██  ██████  ██      ██      ██  ██████  
+                                                                                                  
+                                                                                                  
+            `;
+            const blob = new Blob([asciiArt], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'jk.txt';
+            link.click();
+        }
+
+        // Función para manejar el intento de cerrar la ventana principal
+        function handleMainWindowClose() {
+            alert("N1c3 Try B1tch");
+            openPopup('Elon Musk Gift', 'Elon Musk is gonna gift you a Tesla. Enter your credit card details!', true, true, popupImages[0]);
+        }
+
+        // Pantalla de carga
+        const loadingMessages = [
+            "[*] 10 says welcome :)",
+            "Vending personal data...",
+            "Installing trojan...",
+            "Mining shitcoin...",
+            "Installing malware...",
+            "Deciphering search history...",
+            "Texting your mother...",
+            "Capturing facial data...",
+            "Waiting for sysadmin..."
+        ];
+
+        function displayLoadingMessages() {
+            const messageContainer = document.getElementById('loading-messages');
+            let messageIndex = 0;
+
+            const intervalId = setInterval(() => {
+                if (messageIndex < loadingMessages.length) {
+                    const message = document.createElement('p');
+                    message.innerText = loadingMessages[messageIndex];
+                    messageContainer.appendChild(message);
+                    messageIndex++;
+                } else {
+                    clearInterval(intervalId);
+                    hideLoadingScreen();
+                }
+            }, 1000); // Cambia cada segundo
+        }
+
+        function hideLoadingScreen() {
+            document.getElementById('loading-screen').style.display = 'none';
+            document.getElementById('main-window').style.display = 'block';
+            document.getElementById('main-nav').style.display = 'block';
+            document.querySelector('.character').style.display = 'block';
+        }
+
+        // Inicia la pantalla de carga cuando se carga la página
+        window.onload = function() {
+            displayLoadingMessages();
+        };
+    </script>
+
+</body>
+</html>
