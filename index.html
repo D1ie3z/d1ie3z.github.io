@@ -390,5 +390,101 @@
 	}
     </script>
 
+<!-- ══ OBVIO CLAUDE WE NOMAMES ══ -->
+<div id="ctx" style="display:none;position:fixed;background:#c0c0c0;border:2px solid;border-color:#fff #555 #555 #fff;min-width:160px;z-index:9999;box-shadow:2px 2px 0 #000;font-family:'Press Start 2P',cursive;">
+  <div class="ci" data-a="refresh" style="padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;color:#000;position:relative" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'">Refresh</div>
+  <div class="ci sub" data-a="new" style="padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;color:#000;position:relative" onmouseover="this.style.background='#000080';this.style.color='#fff';showCtxSub(this)" onmouseout="this.style.background='';this.style.color='#000'">New ▶</div>
+  <div style="height:1px;background:#888;margin:2px 4px"></div>
+  <div class="ci" data-a="help" style="padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;color:#000" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'">Help</div>
+  <div style="height:1px;background:#888;margin:2px 4px"></div>
+  <div class="ci" data-a="props" style="padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;color:#000" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'">Properties</div>
+</div>
+
+<div id="ctx-sub" style="display:none;position:fixed;background:#c0c0c0;border:2px solid;border-color:#fff #555 #555 #fff;min-width:160px;z-index:10000;box-shadow:2px 2px 0 #000;font-family:'Press Start 2P',cursive;">
+  <div data-s="folder" style="padding:5px 12px;font-size:9px;cursor:pointer;color:#000" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'" onclick="ctxSubAction('folder')">📁 Folder</div>
+  <div data-s="textdoc" style="padding:5px 12px;font-size:9px;cursor:pointer;color:#000" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'" onclick="ctxSubAction('textdoc')">📄 Text Document</div>
+  <div data-s="shortcut" style="padding:5px 12px;font-size:9px;cursor:pointer;color:#000" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'" onclick="ctxSubAction('shortcut')">🔗 Shortcut</div>
+</div>
+
+<script>
+// ══ CONTEXT MENU ══
+const TR_FOLDER  = ["Congratulations!\nYou created a folder.\nIt's empty and lost,\nlike you.","New Folder.\nNobody will put\nanything in it.\nJust like your life.","You gonna name it\n'New Folder (2)'\naren't you."];
+const TR_DOC     = ["Text Document created.\nYou won't finish\nwhatever you're\nabout to write.\nWe both know it.","Blank document.\nJust like your future.","Nobody reads these.\nEspecially not you."];
+const TR_SHORT   = ["Shortcut created.\nIt points to nowhere.\nMuch like your goals.","Shortcut.lnk\nThis IS a shortcut\nto disappointment."];
+const TR_REFRESH = ["Refreshing...\nNothing changed.\nYour problems\nare still here.","Refresh complete.\nStill the same desktop.\nStill the same you."];
+const TR_PROPS   = ["Owner: Not you\nSize: Too big for\nyour brain\nCreated: Before you\nwere relevant\nModified: Get a job","System Properties:\nRAM: Not enough\nCPU: Struggling\nUser: Suspicious\nPlease update\nyour life."];
+
+function ctxRand(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+function ctxTrollWin(msg, title) {
+  const win = document.createElement('div');
+  win.classList.add('window');
+  win.style.top = (60 + Math.random()*200)+'px';
+  win.style.left = (60 + Math.random()*300)+'px';
+  win.innerHTML = `
+    <div class="window-header">
+      <span>${title}</span>
+      <button class="close-btn" onclick="this.parentElement.parentElement.remove()">X</button>
+    </div>
+    <div class="window-content">
+      <p style="font-family:'Courier New',monospace;font-size:11px;white-space:pre-line;text-align:left">${msg}</p>
+    </div>`;
+  document.body.appendChild(win);
+}
+
+function showCtxSub(el) {
+  const sub = document.getElementById('ctx-sub');
+  const r = el.getBoundingClientRect();
+  sub.style.display = 'block';
+  sub.style.left = (r.right - 2) + 'px';
+  sub.style.top = r.top + 'px';
+}
+
+function ctxSubAction(s) {
+  hideCtx();
+  if(s==='folder')   ctxTrollWin(ctxRand(TR_FOLDER),  'Folder');
+  else if(s==='textdoc')  ctxTrollWin(ctxRand(TR_DOC), 'New Text Document.txt - Notepad');
+  else if(s==='shortcut') ctxTrollWin(ctxRand(TR_SHORT),'Create Shortcut');
+}
+
+function hideCtx() {
+  document.getElementById('ctx').style.display = 'none';
+  document.getElementById('ctx-sub').style.display = 'none';
+}
+
+document.addEventListener('contextmenu', e => {
+  e.preventDefault();
+  hideCtx();
+  const ctx = document.getElementById('ctx');
+  ctx.style.display = 'block';
+  let x = e.clientX, y = e.clientY;
+  if(x + 170 > innerWidth)  x = innerWidth  - 175;
+  if(y + 180 > innerHeight) y = innerHeight - 185;
+  ctx.style.left = x + 'px';
+  ctx.style.top  = y + 'px';
+});
+
+document.getElementById('ctx').addEventListener('click', e => {
+  const a = e.target.dataset.a;
+  if(!a) return;
+  hideCtx();
+  if(a==='refresh') ctxTrollWin(ctxRand(TR_REFRESH), 'Refresh');
+  else if(a==='help')  {
+    // Reutiliza tu BSOD si existe, si no abre una ventana troll
+    if(typeof showBSOD === 'function') showBSOD();
+    else ctxTrollWin("A fatal exception\nhas occurred.\n\nPress ESC to recover.\n\n(just kidding)", 'Help');
+  }
+  else if(a==='props') ctxTrollWin(ctxRand(TR_PROPS), 'Properties');
+});
+
+document.getElementById('ctx-sub').addEventListener('mouseleave', hideCtx);
+
+document.addEventListener('click', e => {
+  const ctx = document.getElementById('ctx');
+  const sub = document.getElementById('ctx-sub');
+  if(!ctx.contains(e.target) && !sub.contains(e.target)) hideCtx();
+});
+</script>
+	
 </body>
 </html>
