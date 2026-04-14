@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SSRF - D1ie3z</title>
+    <link rel="icon" href="10.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #0000FF;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: glitch-background 8s infinite;
+            color: #00FF00;
+        }
+
+        @keyframes glitch-background {
+            0%, 98% {
+                background-image: url('background1.png');
+            }
+            98.5%, 99% {
+                background-image: url('glitcho.jpg');
+            }
+            99.5%, 100% {
+                background-image: url('tv.jpg');
+            }
+        }
+
+        .window {
+            width: 90%;
+            max-width: 500px;
+            background-color: #C0C0C0;
+            border: 2px solid #000080;
+            padding: 10px;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .window-header {
+            background-color: #000080;
+            color: white;
+            padding: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .window-content {
+            padding: 10px;
+            background-color: #C0C0C0;
+            color: black;
+            text-align: center;
+        }
+
+        .close-btn {
+            background-color: #FF0000;
+            width: 20px;
+            height: 20px;
+            color: white;
+            border: none;
+            font-family: 'Press Start 2P', cursive;
+            cursor: pointer;
+        }
+
+        .title-text {
+            color: #000080;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .payload {
+            font-size: 10px;
+            background-color: #000;
+            color: #00FF00;
+            padding: 10px;
+            margin-top: 10px;
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="window">
+        <div class="window-header">
+            <span>Nah nah que crack</span>
+            <button class="close-btn" onclick="alert('Really man?')">X</button>
+        </div>
+        <div class="window-content">
+            <p class="title-text">PoC: Server Side Request Forgery</p>
+            <p>Redirecting request... capturing internal content.</p>
+            <div class="payload">GET Fotos.de.tuGfa.com</div>
+            <p><em>Payload being sent... Do not close please :(.</em></p>
+        </div>
+    </div>
+
+    <!-- script intacto -->
+
