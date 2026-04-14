@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D1ie3z</title>
+<link rel="icon" href="10.ico" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Press Start 2P',cursive;
+  background:#0000ff;
+  min-height:100vh;
+  overflow:hidden;
+  cursor:default;
+  user-select:none;
+}
+
+/* ══════════════════════════
+   BOOT SCREEN
+══════════════════════════ */
+#boot{
+  position:fixed;inset:0;
+  background:#0000ff;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  z-index:9999;
+}
+#boot-inner{
+  text-align:left;
+  font-size:12px;
+  color:#00ff00;
+  line-height:2.2;
+}
+#boot-title{
+  font-size:11px;color:#00ff00;
+  letter-spacing:3px;margin-bottom:28px;
+  text-align:center;
+}
+#boot-msgs p{margin:0}
+#boot-bar-wrap{margin-top:20px}
+#boot-bar-label{font-size:9px;color:#00aa00;margin-bottom:6px}
+#boot-bar-track{width:320px;height:10px;border:1px solid #00aa00;background:#000011}
+#boot-bar{width:0%;height:10px;background:#00ff00;transition:width 0.08s linear}
+
+/* ══════════════════════════
+   DESKTOP
+══════════════════════════ */
+#desktop{
+  display:none;
+  position:fixed;inset:0;
+  background:#000066;
+  overflow:hidden;
+}
+
+/* TV glitch effect */
+#desktop::before{
+  content:'';
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 3px,rgba(0,0,80,0.08) 3px,rgba(0,0,80,0.08) 4px
+  );
+  pointer-events:none;z-index:0;
+}
+#desktop-bg{
+  position:absolute;inset:0;
+  background:#000066;
+  animation:tv-glitch 18s infinite;
+  z-index:0;
+}
+@keyframes tv-glitch{
+  0%,89%{
+    background:#000066;
+    filter:none;
+  }
+  90%,90.3%{
+    background:#0000aa;
+    filter:brightness(2) saturate(0);
+    transform:translateX(3px);
+  }
+  90.6%,90.9%{
+    background:#000044;
+    filter:brightness(0.3);
+    transform:translateX(-2px);
+  }
+  91.2%,94%{
+    background:url('tv.jpg') center/cover;
+    filter:saturate(0) contrast(2);
+  }
+  94.3%,95%{
+    background:url('glitcho.jpg') center/cover;
+    filter:hue-rotate(180deg) saturate(3);
+  }
+  95.3%,100%{
+    background:#000066;
+    filter:none;
+    transform:none;
+  }
+}
+
+/* ── DESKTOP ICONS ── */
+#icons{
+  position:absolute;top:10px;left:10px;
+  display:flex;flex-direction:column;
+  flex-wrap:wrap;gap:8px;
+  height:calc(100vh - 46px);
+  align-content:flex-start;
+  z-index:5;
+}
+.dicon{
+  width:74px;display:flex;flex-direction:column;
+  align-items:center;gap:5px;cursor:pointer;
+  padding:4px;border:1px solid transparent;
+}
+.dicon:hover,.dicon.sel{
+  background:rgba(0,0,160,0.5);
+  border:1px dotted #aaaaff;
+}
+.dicon img{width:40px;height:40px;object-fit:contain;image-rendering:pixelated}
+.di-emoji{font-size:28px;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.di-label{
+  font-size:7px;color:#fff;text-align:center;
+  text-shadow:1px 1px 0 #000055;
+  padding:1px 3px;word-break:break-word;line-height:1.4;
+}
+.dicon:hover .di-label,.dicon.sel .di-label{background:#000080}
+
+/* ── MONKEY ── */
+#monkey{
+  position:absolute;bottom:44px;
+  width:58px;height:58px;image-rendering:pixelated;
+  z-index:6;pointer-events:none;
+}
+
+/* ── CHARACTER (rabbid) ── */
+#character{
+  position:absolute;bottom:44px;right:16px;
+  width:76px;height:76px;
+  z-index:6;cursor:pointer;
+  transition:transform 0.15s ease;
+}
+#character:hover{transform:scale(1.1)}
+#char-bubble{
+  display:none;
+  position:absolute;bottom:130px;right:10px;
+  background:#fff;color:#000;
+  border:2px solid #000055;padding:8px 10px;
+  font-size:7px;line-height:2;
+  max-width:160px;z-index:20;
+}
+#char-bubble::after{
+  content:'';position:absolute;bottom:-10px;right:22px;
+  border:5px solid transparent;border-top-color:#000055;
+}
+
+/* ══════════════════════════
+   TASKBAR
+══════════════════════════ */
+#taskbar{
+  position:absolute;bottom:0;left:0;width:100%;height:36px;
+  background:#c0c0c0;
+  border-top:2px solid #fff;
+  display:flex;align-items:center;gap:4px;padding:0 4px;
+  z-index:9000;
+}
+#start-btn{
+  background:#c0c0c0;
+  border:2px solid;border-color:#fff #555 #555 #fff;
+  padding:3px 10px;font-family:'Press Start 2P',cursive;
+  font-size:9px;cursor:pointer;font-weight:bold;
+  display:flex;align-items:center;gap:6px;
+}
+#start-btn:active{border-color:#555 #fff #fff #555}
+#taskbar-wins{display:flex;gap:4px;flex:1;overflow:hidden}
+.tb-btn{
+  background:#c0c0c0;
+  border:2px solid;border-color:#555 #fff #fff #555;
+  padding:3px 8px;font-family:'Press Start 2P',cursive;
+  font-size:8px;cursor:pointer;min-width:100px;text-align:left;color:#000;
+}
+#taskbar-clock{
+  margin-left:auto;
+  border:2px solid;border-color:#555 #fff #fff #555;
+  padding:3px 8px;font-size:8px;min-width:60px;text-align:center;color:#000;
+}
+
+/* ══════════════════════════
+   START MENU
+══════════════════════════ */
+#start-menu{
+  display:none;position:absolute;bottom:36px;left:0;
+  width:220px;background:#c0c0c0;
+  border:2px solid;border-color:#fff #555 #555 #fff;
+  z-index:9001;overflow:hidden;
+  box-shadow:2px 2px 0 #000;
+}
+.sm-strip{
+  float:left;width:22px;background:#000080;min-height:240px;
+  writing-mode:vertical-rl;display:flex;
+  align-items:flex-end;justify-content:center;
+  padding-bottom:8px;font-size:8px;color:#fff;letter-spacing:3px;
+}
+#start-menu ul{list-style:none;padding:4px 0;margin-left:22px}
+#start-menu li{
+  padding:7px 12px;font-size:9px;cursor:pointer;
+  display:flex;align-items:center;gap:8px;
+  white-space:nowrap;color:#000;
+}
+#start-menu li:hover{background:#000080;color:#fff}
+.sm-div{height:1px;background:#888;margin:2px 4px}
+
+/* ══════════════════════════
+   WINDOWS
+══════════════════════════ */
+.win{
+  position:absolute;
+  background:#c0c0c0;
+  border:2px solid;border-color:#fff #555 #555 #fff;
+  min-width:280px;
+  box-shadow:2px 2px 0 #000;
+  z-index:100;
+}
+.win.focused{z-index:200}
+.win-tb{
+  background:linear-gradient(90deg,#000080,#1084d0);
+  color:#fff;padding:4px 6px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:9px;cursor:move;gap:6px;
+  white-space:nowrap;
+}
+.win-tb-t{flex:1;overflow:hidden;text-overflow:ellipsis}
+.win-ctrls{display:flex;gap:2px;flex-shrink:0}
+.wcb{
+  width:16px;height:14px;background:#c0c0c0;
+  border:1px solid;border-color:#fff #555 #555 #fff;
+  font-size:9px;cursor:pointer;font-family:'Press Start 2P',cursive;
+  color:#000;display:flex;align-items:center;justify-content:center;
+}
+.wcb:active{border-color:#555 #fff #fff #555}
+.win-menubar{
+  background:#c0c0c0;border-bottom:1px solid #888;
+  padding:2px 4px;display:flex;
+}
+.wmi{font-size:9px;cursor:pointer;padding:2px 8px;color:#000}
+.wmi:hover{background:#000080;color:#fff}
+.win-body{
+  padding:10px;font-size:9px;line-height:1.9;color:#000;
+  max-height:65vh;overflow-y:auto;
+}
+.win-status{
+  border-top:1px solid #888;padding:2px 4px;display:flex;
+}
+.win-status span{
+  border:1px solid;border-color:#555 #fff #fff #555;
+  padding:1px 8px;font-size:8px;color:#444;
+}
+
+/* ══════════════════════════
+   CONTEXT MENU
+══════════════════════════ */
+#ctx{
+  display:none;position:absolute;background:#c0c0c0;
+  border:2px solid;border-color:#fff #555 #555 #fff;
+  min-width:160px;z-index:9000;box-shadow:2px 2px 0 #000;
+}
+#ctx-sub{
+  display:none;position:absolute;background:#c0c0c0;
+  border:2px solid;border-color:#fff #555 #555 #fff;
+  min-width:160px;z-index:9001;box-shadow:2px 2px 0 #000;
+}
+.ci{padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;white-space:nowrap;position:relative;color:#000}
+.ci:hover{background:#000080;color:#fff}
+.ci.sub::after{content:'▶';position:absolute;right:8px;top:5px}
+.cdiv{height:1px;background:#888;margin:2px 4px}
+
+/* ══════════════════════════
+   BSOD
+══════════════════════════ */
+#bsod{
+  display:none;position:fixed;inset:0;
+  background:#000080;color:#fff;
+  font-size:11px;padding:40px 60px;
+  z-index:99999;line-height:2.2;overflow-y:auto;
+}
+.bsod-hl{background:#aaa;color:#000080;padding:2px 8px}
+#bsod-out{margin-top:16px}
+#bsod-cur{animation:blink 0.8s step-end infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* ══════════════════════════
+   CONTENT STYLES (inside windows)
+══════════════════════════ */
+/* Notepad */
+.npad{
+  background:#fff;color:#000;
+  font-family:'Courier New',monospace;font-size:11px;
+  padding:8px;width:100%;min-height:80px;line-height:1.8;
+  border:2px solid;border-color:#555 #fff #fff #555;
+}
+/* popup img */
+.popup-img{width:100%;max-height:120px;object-fit:contain;margin-bottom:8px;image-rendering:pixelated}
+
+/* Profile content */
+.prof-section{margin-bottom:14px}
+.prof-label{font-size:8px;color:#000080;margin-bottom:4px}
+.prof-value{font-size:8px;color:#000;line-height:2}
+.tag{
+  display:inline-block;font-size:7px;
+  background:#000080;color:#fff;
+  padding:2px 6px;margin:2px;
+}
+.link-row{
+  display:flex;align-items:center;gap:8px;
+  padding:6px 0;border-bottom:1px solid #888;font-size:8px;
+}
+.link-row:last-child{border-bottom:none}
+.link-row a{color:#000080;cursor:pointer}
+.link-row a:hover{text-decoration:underline}
+
+/* Bug bounty */
+.bug-item{
+  border:1px solid #888;padding:8px;margin-bottom:8px;
+  background:#f0f0f0;
+}
+.bug-badges{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px}
+.badge{font-size:7px;padding:2px 5px}
+.b-res{background:#003300;color:#00cc55}
+.b-tri{background:#222200;color:#aacc00}
+.b-crit{background:#330000;color:#ff4444}
+.b-high{background:#221100;color:#ff8800}
+.b-type{background:#000033;color:#4488ff}
+.bug-target{font-size:8px;font-weight:bold;margin-bottom:4px}
+.bug-detail{font-size:8px;color:#333;line-height:2}
+.bug-detail code{color:#000080;font-family:'Courier New',monospace;font-size:10px}
+
+/* Post list */
+.post-list{list-style:none}
+.post-row{
+  border-bottom:1px solid #888;padding:7px 4px;
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+}
+.post-row:hover{background:#000080;color:#fff}
+.ptag{
+  background:#000080;color:#fff;
+  font-size:7px;padding:2px 4px;white-space:nowrap;flex-shrink:0;
+}
+.post-row:hover .ptag{background:#fff;color:#000080}
+.ptitle{font-size:8px;flex:1;line-height:1.5}
+.pdate{font-size:7px;color:#666;white-space:nowrap}
+.post-row:hover .pdate{color:#aaa}
+
+/* Cert */
+.cert-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px;border-bottom:1px solid #888;
+}
+.cert-row:last-child{border-bottom:none}
+.cert-icon{font-size:20px;flex-shrink:0}
+.cert-name{font-size:9px;margin-bottom:2px}
+.cert-issuer{font-size:7px;color:#444}
+
+/* CTF */
+.ctf-row{padding:8px;border-bottom:1px solid #888}
+.ctf-row:last-child{border-bottom:none}
+.ctf-name{font-size:9px;margin-bottom:4px}
+.ctf-meta{font-size:8px;color:#333;line-height:2}
+.ctf-flag{font-family:'Courier New',monospace;font-size:10px;color:#000080}
+
+/* Music */
+.music-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px;border-bottom:1px solid #888;
+}
+.music-row:last-child{border-bottom:none}
+.music-art{
+  width:40px;height:40px;background:#000080;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.music-title{font-size:8px;margin-bottom:2px}
+.music-artist{font-size:7px;color:#444}
+</style>
+</head>
+<body>
+
+<!-- ══ BOOT ══ -->
+<div id="boot">
+  <div id="boot-inner">
+    <div id="boot-title">LOADING EXPERIENCE</div>
+    <div id="boot-msgs"></div>
+    <div id="boot-bar-wrap">
+      <div id="boot-bar-track"><div id="boot-bar"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DESKTOP ══ -->
+<div id="desktop">
+  <!-- Icons -->
+  <div id="icons">
+    <div class="dicon" data-a="about">
+      <img src="10.jpeg" alt="">
+      <span class="di-label">d3sKt0p</span>
+    </div>
+    <div class="dicon" data-a="profile">
+      <div class="di-emoji">👤</div>
+      <span class="di-label">Pr0file</span>
+    </div>
+    <div class="dicon" data-a="blog">
+      <div class="di-emoji">💤</div>
+      <span class="di-label">BL0G</span>
+    </div>
+    <div class="dicon" data-a="bugbounty">
+      <div class="di-emoji">🐛</div>
+      <span class="di-label">Bug Bounty</span>
+    </div>
+    <div class="dicon" data-a="certs">
+      <img src="osex_badge.png" alt="">
+      <span class="di-label">Certs</span>
+    </div>
+  </div>
+
+  <!-- Monkey walker -->
+  <img id="monkey" src="monkey-mono.gif" alt="">
+
+  <!-- Rabbid character -->
+  <div id="character" onclick="charTalk()">
+    <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="40" cy="55" rx="22" ry="20" fill="#e8e8e8" stroke="#333" stroke-width="1.5"/>
+      <ellipse cx="40" cy="32" rx="20" ry="22" fill="#f2f2f2" stroke="#333" stroke-width="1.5"/>
+      <ellipse cx="26" cy="10" rx="5" ry="14" fill="#f2f2f2" stroke="#333" stroke-width="1.5"/>
+      <ellipse cx="54" cy="10" rx="5" ry="14" fill="#f2f2f2" stroke="#333" stroke-width="1.5"/>
+      <ellipse cx="26" cy="10" rx="2.5" ry="10" fill="#ffb3c1"/>
+      <ellipse cx="54" cy="10" rx="2.5" ry="10" fill="#ffb3c1"/>
+      <circle cx="32" cy="30" r="9" fill="#fff" stroke="#333" stroke-width="1.5"/>
+      <circle cx="48" cy="30" r="9" fill="#fff" stroke="#333" stroke-width="1.5"/>
+      <circle cx="34" cy="30" r="5" fill="#cc0000"/>
+      <circle cx="50" cy="30" r="5" fill="#cc0000"/>
+      <circle cx="35" cy="28" r="2" fill="#fff"/>
+      <circle cx="51" cy="28" r="2" fill="#fff"/>
+      <ellipse cx="40" cy="40" rx="3" ry="2" fill="#ffb3c1" stroke="#333" stroke-width="1"/>
+      <path d="M30 44 Q40 52 50 44" stroke="#333" stroke-width="1.5" fill="none"/>
+      <ellipse cx="18" cy="56" rx="5" ry="10" fill="#e8e8e8" stroke="#333" stroke-width="1.5" transform="rotate(-20 18 56)"/>
+      <ellipse cx="62" cy="56" rx="5" ry="10" fill="#e8e8e8" stroke="#333" stroke-width="1.5" transform="rotate(20 62 56)"/>
+      <ellipse cx="40" cy="58" rx="12" ry="10" fill="#fff" stroke="#ddd" stroke-width="1"/>
+    </svg>
+  </div>
+  <div id="char-bubble"></div>
+
+  <!-- Context menu -->
+  <div id="ctx">
+    <div class="ci" data-a="refresh">Refresh</div>
+    <div class="ci sub" data-a="new">New</div>
+    <div class="cdiv"></div>
+    <div class="ci" data-a="help">Help</div>
+    <div class="cdiv"></div>
+    <div class="ci" data-a="props">Properties</div>
+  </div>
+  <div id="ctx-sub">
+    <div class="ci" data-s="folder">Folder</div>
+    <div class="ci" data-s="textdoc">Text Document</div>
+    <div class="ci" data-s="shortcut">Shortcut</div>
+  </div>
+
+  <!-- BSOD -->
+  <div id="bsod">
+    <div><span class="bsod-hl">A fatal exception has occurred.</span></div>
+    <div style="font-size:9px;margin-top:8px">Press ESC or click anywhere to recover.</div>
+    <div id="bsod-out"><span id="bsod-cur">█</span></div>
+  </div>
+
+  <!-- Taskbar -->
+  <div id="taskbar">
+    <button id="start-btn">⊞ Start</button>
+    <div id="taskbar-wins"></div>
+    <div id="taskbar-clock">--:--</div>
+  </div>
+
+  <!-- Start menu -->
+  <div id="start-menu">
+    <div class="sm-strip">D1ie3z</div>
+    <ul>
+      <li data-sm="profile">Pr0file</li>
+      <li data-sm="blog">BL0G</li>
+      <li data-sm="bugbounty">Bug Bounty</li>
+      <li data-sm="certs">Certs</li>
+      <div class="sm-div"></div>
+      <li data-sm="ssrf">SSRF.html</li>
+      <li data-sm="login">l0gin.html</li>
+      <div class="sm-div"></div>
+      <li data-sm="help">Help</li>
+      <div class="sm-div"></div>
+      <li data-sm="reboot">Reboot</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ══════════════════════════════════════
+// DATA LO VOY A ACTUALIZAR
+// ══════════════════════════════════════
+const POSTS = [
+  { id:'ssrf-prod', tag:'// SSRF',  title:'C0MO HICE UN SSRF EN PR0DUCCION', date:'2025-03-14',
+    body:'<p>Pues nomas le puse el colab we</p><br><p>CVSS: 9.1 — Full read de metadata interna AWS.</p><br><p style="color:#555"><em>Coming soon...</em></p>' },
+  { id:'recon',     tag:'// RECON', title:'T00LS QUE US0 PARA RECON', date:'2025-02-28',
+    body:'<p>subfinder, httpx, nuclei...</p><br><p>Luego lo actualizo cabron.</p><br><p style="color:#555"><em>Coming soon...</em></p>' },
+  { id:'oscp',      tag:'// CERTS', title:'V4LE LA PENA EL OSCP EN 2025?', date:'2025-01-10',
+    body:'<p>Mi opinion despues de tenerlo.</p><br><p>Lo que nadie te dice antes de pagarlo.</p><br><p style="color:#555"><em>Coming soon...</em></p>' },
+];
+
+const BUGS = [
+  { status:'resolved', severity:'critical', type:'IDOR → Account Takeover',
+    target:'[REDACTED].com',
+    detail:'bla bla bla no soy tan bueno solo cambio IDs' },
+  { status:'triaged', severity:'high', type:'Intent of hacking',
+    target:'[APP REDACTED]',
+    detail:'vector: implicit intent → exported activity<br>secure: YES <span style="color:red">no</span><br>acceso a funcionalidad interna desde app externa' },
+  { status:'resolved', severity:'high', type:'Privilege Escalation via Porfavor',
+    target:'[REDACTED] — Web App',
+    detail:'vector: Hackee → Ya me titule de por favor <br>Luego pongo las chidas' },
+];
+
+const CERTS = [
+  { icon:'🏆', name:'OSCP', issuer:'Offensive Security — pay harder lol' },
+  { icon:'💸', name:'OSEP', issuer:'OffSec — literalmente lo mismo pero más caro' },
+  { icon:'🕸️', name:'OSWE', issuer:'OffSec — sigo pagando, gracias por preguntar' },
+  { icon:'📜', name:'eCPPTv2', issuer:'eLearnSecurity — la más barata del lote' },
+  { icon:'🤖', name:'C-AI/MLPen', issuer:'Alguien pensó que era buena idea' },
+  { icon:'📡', name:'OSWP', issuer:'OffSec — wifi hacking en 2024, muy necesario' },
+  { icon:'🌐', name:'OSWA', issuer:'OffSec — coleccionismo de logos naranjas' },
+  { icon:'🍆', name:'Certificado de Follador', issuer:'Expedido por la calle — campo práctico' },
+  { icon:'👦', name:'Certi Boy', issuer:'Otorgado con honor y vergüenza' },
+];
+
+const CHAR_LINES = [
+  "BWAAAH!","You shouldn't\nbe here...","I see everything.",
+  "Nice search history\nlol","Have you tried\nturning it off\nand on again?",
+  "Your IP is\n127.0.0.1\ntotally.","BWAAAH!!!\n(that's all I got)",
+  "I'm watching you.","Click me again.\nI dare you.","Still here?\nWeird.","DEJA MI CHILITO!!",
+];
+
+const BOOT_LINES = [
+  "[*] 10 says welcome :)","Vending personal data...",
+  "Installing trojan...","Mining shitcoin...",
+  "Installing malware...","Deciphering search history...",
+  "Texting your mother...","Capturing facial data...",
+  "Waiting for sysadmin...","Done. Probably.",
+];
+
+const BSOD_LINES = [
+  "Logging IP address...","Stealing your identity...",
+  "Installing Norton Antivirus...","Reticulating splines...",
+  "Texting your mother...","Harvesting meta-organs...",
+  "Capturing facial data...","Emptying bank account...",
+  "Giving your grandma a stroke...","Deleting system32...",
+  "Logging keystrokes...","Redownloading internet...",
+  "Applying free AOL hours...","Disabling VPN...",
+  "Harshing your mellow...",":(){:|:& };:",
+  "Spoofing emails...","Deciphering search history...",
+  "Triangulating location...","Vending personal data...",
+  "Hiding in your walls...","Initializing 5G neural scrambler...",
+  "Monitoring calls...","Contacting your personal FBI agent...",
+  "Charging credit cards...","Immanentizing the eschaton...",
+  "Fermenting jenkem...","Spinning violently around the y-axis...",
+  "Pay no attention to the man behind the curtain...",
+  "Please wait while the little elves draw your map...",
+  "Following the white rabbit...","Counting backwards from infinity...",
+  "","Done. Just kidding.","You can close this now.",
+  "Or don't. I'm a BSOD, not a cop.",
+];
+
+const TR_FOLDER  = ["Congratulations!\nYou created a folder.\nIt's empty and lost,\nlike you.","New Folder.\nNobody will put\nanything in it.\nJust like your life.","You gonna name it\n'New Folder (2)'\naren't you."];
+const TR_DOC     = ["Text Document created.\nYou won't finish\nwhatever you're\nabout to write.\nWe both know it.","Blank document.\nJust like your future.","Nobody reads these.\nEspecially not you."];
+const TR_SHORT   = ["Shortcut created.\nIt points to nowhere.\nMuch like your goals.","Shortcut.lnk\nThis IS a shortcut\nto disappointment."];
+const TR_REFRESH = ["Refreshing...\nNothing changed.\nYour problems\nare still here.","Refresh complete.\nStill the same desktop.\nStill the same you."];
+const TR_PROPS   = ["Owner: Not you\nSize: Too big for\nyour brain\nCreated: Before you\nwere relevant\nModified: Get a job","System Properties:\nRAM: Not enough\nCPU: Struggling\nUser: Suspicious\nPlease update\nyour life."];
+
+// ══════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════
+(function() {
+  const msgs = document.getElementById('boot-msgs');
+  const bar  = document.getElementById('boot-bar');
+  let i = 0;
+  function go() {
+    if (i >= BOOT_LINES.length) { setTimeout(launch, 350); return; }
+    const p = document.createElement('p'); p.textContent = BOOT_LINES[i];
+    msgs.appendChild(p);
+    bar.style.width = ((i+1)/BOOT_LINES.length*100) + '%';
+    i++; setTimeout(go, 900);
+  }
+  go();
+})();
+
+function launch() {
+  document.getElementById('boot').style.display = 'none';
+  document.getElementById('desktop').style.display = 'block';
+  initAll();
+}
+
+// ══════════════════════════════════════
+// WINDOW SYSTEM
+// ══════════════════════════════════════
+let topZ = 200;
+const desktop = () => document.getElementById('desktop');
+
+function makeWin({ id, title, w=340, t=60, l=80, menu=[], body='', status='' }) {
+  const old = document.getElementById(id);
+  if (old) { old.remove(); removeTB(id); }
+  const win = document.createElement('div');
+  win.className = 'win focused'; win.id = id;
+  win.style.cssText = `top:${t}px;left:${l}px;width:${w}px;z-index:${++topZ};position:absolute`;
+  const mbar = menu.length
+    ? `<div class="win-menubar">${menu.map(m=>`<span class="wmi" data-wa="${m.a}">${m.l}</span>`).join('')}</div>`
+    : '';
+  win.innerHTML = `
+    <div class="win-tb">
+      <span class="win-tb-t">${title}</span>
+      <div class="win-ctrls">
+        <button class="wcb" data-wc="min">_</button>
+        <button class="wcb" data-wc="max">□</button>
+        <button class="wcb" data-wc="cls" style="background:#ff6b6b">X</button>
+      </div>
+    </div>${mbar}
+    <div class="win-body">${body}</div>
+    ${status?`<div class="win-status"><span>${status}</span></div>`:''}`;
+  desktop().appendChild(win);
+  dragify(win); focusWin(win); addTB(id, title);
+  win.querySelector('[data-wc="cls"]').onclick = () => killWin(id);
+  win.querySelector('[data-wc="min"]').onclick = () => minWin(id);
+  win.querySelectorAll('.wmi').forEach(m => {
+    m.onclick = () => { if (m.dataset.wa==='bsod') showBSOD(); };
+  });
+  win.addEventListener('mousedown', () => focusWin(win));
+  return win;
+}
+
+function focusWin(win) {
+  document.querySelectorAll('.win').forEach(w => w.classList.remove('focused'));
+  win.classList.add('focused'); win.style.zIndex = ++topZ;
+}
+function killWin(id) { const w=document.getElementById(id); if(w)w.remove(); removeTB(id); }
+function minWin(id) {
+  const w=document.getElementById(id); if(w)w.style.display='none';
+  const b=document.getElementById('tb-'+id); if(b)b.dataset.min='1';
+}
+function addTB(id, title) {
+  const bar=document.getElementById('taskbar-wins'); if(!bar)return;
+  if(document.getElementById('tb-'+id))return;
+  const b=document.createElement('button'); b.className='tb-btn'; b.id='tb-'+id;
+  b.textContent=title.length>14?title.slice(0,14)+'…':title;
+  b.onclick=()=>{
+    const w=document.getElementById(id); if(!w)return;
+    if(b.dataset.min==='1'){w.style.display='';b.dataset.min='0';focusWin(w);}else focusWin(w);
+  };
+  bar.appendChild(b);
+}
+function removeTB(id){ const b=document.getElementById('tb-'+id); if(b)b.remove(); }
+
+function dragify(win) {
+  const tb=win.querySelector('.win-tb');
+  let drag=false, ox=0, oy=0;
+  tb.addEventListener('mousedown',e=>{
+    if(e.target.classList.contains('wcb'))return;
+    drag=true; ox=e.clientX-win.offsetLeft; oy=e.clientY-win.offsetTop;
+    focusWin(win); e.preventDefault();
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!drag)return;
+    const dt=desktop();
+    win.style.left=Math.max(0,Math.min(e.clientX-ox,dt.offsetWidth-win.offsetWidth))+'px';
+    win.style.top=Math.max(0,Math.min(e.clientY-oy,dt.offsetHeight-36-win.offsetHeight))+'px';
+  });
+  document.addEventListener('mouseup',()=>drag=false);
+}
+
+// ══════════════════════════════════════
+// BSOD
+// ══════════════════════════════════════
+function showBSOD() {
+  const bsod=document.getElementById('bsod'),out=document.getElementById('bsod-out'),cur=document.getElementById('bsod-cur');
+  bsod.style.display='block'; out.innerHTML=''; out.appendChild(cur);
+  let i=0;
+  const iv=setInterval(()=>{
+    if(i>=BSOD_LINES.length){
+      clearInterval(iv); cur.style.display='none';
+      const h=document.createElement('div'); h.style.cssText='margin-top:24px;font-size:9px;animation:blink 1s step-end infinite';
+      h.textContent='[ Click anywhere or press ESC to return ]'; out.appendChild(h); return;
+    }
+    const d=document.createElement('div'); d.textContent=BSOD_LINES[i]||'\u00a0';
+    out.insertBefore(d,cur); bsod.scrollTop=bsod.scrollHeight; i++;
+  },75);
+  function dismiss(e){
+    if(e.type==='keydown'&&e.key!=='Escape')return;
+    clearInterval(iv); bsod.style.display='none';
+    document.removeEventListener('click',dismiss);
+    document.removeEventListener('keydown',dismiss);
+  }
+  setTimeout(()=>{document.addEventListener('click',dismiss);document.addEventListener('keydown',dismiss);},600);
+}
+
+// ══════════════════════════════════════
+// WINDOW CONTENTS
+// ══════════════════════════════════════
+const MENU_STD = [{l:'File',a:'noop'},{l:'Help',a:'bsod'}];
+const rand = a => a[Math.floor(Math.random()*a.length)];
+const toH  = s => s.replace(/\n/g,'<br>');
+const jitter = () => ({ t: 50+Math.random()*120, l: 60+Math.random()*200 });
+
+function openAbout() {
+  popSeq = 0;
+  makeWin({id:'win-about',title:'D1ie3z - d3sKt0p',w:320,t:70,l:70,
+    menu:[{l:'File',a:'noop'},{l:'Help',a:'bsod'}],
+    body:`
+      <div style="text-align:center">
+        <img src="10.jpeg" style="width:90px;margin-bottom:8px;image-rendering:pixelated;border:2px solid #000">
+        <p style="margin-bottom:8px">Nothing to see here.<br>Just close this window.</p>
+        <p style="font-size:8px;color:#444;margin-bottom:12px">Just a random one who loves hacking stuff<br>and has some pay harder certs.</p>
+        <button onclick="killWin('win-about');nextPopup()" style="background:#000080;color:#fff;border:none;font-family:'Press Start 2P',cursive;font-size:8px;padding:6px 10px;cursor:pointer">OK</button>
+      </div>`});
+}
+
+const POPUP_SEQ=[
+  {
+    title:'Elon Musk Gift',
+    img:'elon.jpeg',
+    text:'<span style="color:#ff0000;animation:blink 1s step-end infinite">Elon Musk is gonna gift you a Tesla.<br>Enter your credit card details!</span>'
+  },
+  {
+    title:'OMG I did not know that you skate',
+    img:'monkey-mono.gif',
+    text:'<span style="color:#ff0000;animation:blink 1s step-end infinite">Look how cute you are!</span>'
+  },
+  {
+    title:'Chill I am using the web!',
+    img:'winnie.gif',
+    text:'<span style="color:#aaaaff;animation:blink 1s step-end infinite">Me when I see your huge ass!</span>'
+  },
+];
+let popSeq=0;
+function nextPopup(){
+  if(popSeq>=POPUP_SEQ.length){downloadAscii();return;}
+  const p=POPUP_SEQ[popSeq++],id='pop-'+popSeq;
+  const {t,l}=jitter();
+  makeWin({id,title:p.title,w:310,t:t+40,l:l+40,
+    body:`<div style="background:#000;padding:4px;margin-bottom:6px">
+      <img src="${p.img}" style="width:100%;max-height:200px;object-fit:contain;display:block">
+    </div>
+    <div style="text-align:center;padding:6px 4px;font-size:9px;line-height:1.8;margin-bottom:8px">${p.text}</div>
+    <div style="padding:0 4px 8px">
+      <input type="text" placeholder="Enter your details here" style="width:100%;font-size:8px;padding:4px;font-family:'Press Start 2P',cursive;border:1px solid #888">
+    </div>`});
+}
+function downloadAscii(){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob(['BWAAAH!\njk.txt\nA G1FT FR0M D1ie3z'],{type:'text/plain'}));
+  a.download='jk.txt';a.click();
+}
+
+function openProfile() {
+  makeWin({id:'win-profile',title:'Pr0file - D1ie3z',w:400,t:50,l:100,
+    menu:MENU_STD,
+    body:`
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-bottom:12px">
+        <svg width="60" height="60" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="40" cy="55" rx="22" ry="20" fill="#e8e8e8" stroke="#333" stroke-width="1.5"/>
+          <ellipse cx="40" cy="32" rx="20" ry="22" fill="#f2f2f2" stroke="#333" stroke-width="1.5"/>
+          <ellipse cx="26" cy="10" rx="5" ry="14" fill="#f2f2f2" stroke="#333" stroke-width="1.5"/>
+          <ellipse cx="54" cy="10" rx="5" ry="14" fill="#f2f2f2" stroke="#333" stroke-width="1.5"/>
+          <ellipse cx="26" cy="10" rx="2.5" ry="10" fill="#ffb3c1"/>
+          <ellipse cx="54" cy="10" rx="2.5" ry="10" fill="#ffb3c1"/>
+          <circle cx="32" cy="30" r="9" fill="#fff" stroke="#333" stroke-width="1.5"/>
+          <circle cx="48" cy="30" r="9" fill="#fff" stroke="#333" stroke-width="1.5"/>
+          <circle cx="34" cy="30" r="5" fill="#cc0000"/>
+          <circle cx="50" cy="30" r="5" fill="#cc0000"/>
+          <circle cx="35" cy="28" r="2" fill="#fff"/>
+          <circle cx="51" cy="28" r="2" fill="#fff"/>
+          <ellipse cx="40" cy="40" rx="3" ry="2" fill="#ffb3c1" stroke="#333" stroke-width="1"/>
+          <path d="M30 44 Q40 52 50 44" stroke="#333" stroke-width="1.5" fill="none"/>
+          <ellipse cx="18" cy="56" rx="5" ry="10" fill="#e8e8e8" stroke="#333" stroke-width="1.5" transform="rotate(-20 18 56)"/>
+          <ellipse cx="62" cy="56" rx="5" ry="10" fill="#e8e8e8" stroke="#333" stroke-width="1.5" transform="rotate(20 62 56)"/>
+          <ellipse cx="40" cy="58" rx="12" ry="10" fill="#fff" stroke="#ddd" stroke-width="1"/>
+        </svg>
+        <div>
+          <div style="font-size:11px;margin-bottom:4px">D1ie3z</div>
+          <div style="font-size:8px;color:#000080;margin-bottom:8px">@d1ie3z</div>
+          <div style="font-size:8px;color:#333;line-height:2">Just a random one who loves<br>hacking stuff and has some<br>pay harder certs.<br>Ethical ¿Hacker?</div>
+        </div>
+      </div>
+      <div style="margin-bottom:8px">
+        <span class="tag">bug bounty</span><span class="tag">hacking</span><span class="tag">red team</span>
+      </div>
+      <div style="border-top:1px solid #888;padding-top:8px;margin-top:8px">
+        <div class="link-row">▶ <a href="https://youtube.com/@d1ie3z" target="_blank">YouTube — youtube.com/@d1ie3z</a></div>
+        <div class="link-row">⬡ <a href="https://hackerone.com/d1ie3z?type=user" target="_blank">HackerOne — hackerone.com/d1ie3z</a></div>
+      </div>`});
+}
+
+function openBlog() {
+  const rows = POSTS.map(p=>`
+    <li class="post-row" onclick="openPost('${p.id}')">
+      <span class="ptag">${p.tag}</span>
+      <span class="ptitle">${p.title}</span>
+      <span class="pdate">${p.date}</span>
+    </li>`).join('');
+  makeWin({id:'win-blog',title:'BL0G - D1ie3z',w:520,t:40,l:80,
+    menu:MENU_STD,
+    body:`<ul class="post-list">${rows}</ul>`,
+    status:`${POSTS.length} posts | Ready`});
+}
+
+function openPost(id) {
+  const p=POSTS.find(x=>x.id===id); if(!p)return;
+  const {t,l}=jitter();
+  makeWin({id:'post-'+id,title:p.title,w:420,t:t+40,l:l+40,
+    menu:MENU_STD,
+    body:`<div style="margin-bottom:8px"><span class="ptag">${p.tag}</span> <span style="font-size:7px;color:#555">${p.date}</span></div>
+    <div class="npad">${p.body}</div>`});
+}
+
+function openBugBounty() {
+  const cards = BUGS.map(b=>`
+    <div class="bug-item">
+      <div class="bug-badges">
+        <span class="badge b-${b.status}">${b.status.toUpperCase()}</span>
+        <span class="badge b-${b.severity}">${b.severity.toUpperCase()}</span>
+        <span class="badge b-type">${b.type}</span>
+      </div>
+      <div class="bug-target">${b.target}</div>
+      <div class="bug-detail">${b.detail}</div>
+    </div>`).join('');
+  makeWin({id:'win-bb',title:'Bug Bounty - D1ie3z',w:480,t:50,l:100,
+    menu:MENU_STD,body:cards,status:'HackerOne y otras plataformas dejen de stalkear solo quiero hackear '});
+}
+
+function openCerts() {
+  const rows = CERTS.map((c,i) => {
+    const special = c.name.includes('Follador') || c.name.includes('Boy');
+    return `
+    <div class="cert-row" style="${special ? 'background:#fff0f0;border-left:3px solid #ff0000;' : ''}">
+      <div class="cert-icon" style="font-size:22px;min-width:30px">${c.icon}</div>
+      <div>
+        <div class="cert-name" style="${special ? 'color:#cc0000' : ''}">${c.name}</div>
+        <div class="cert-issuer" style="font-style:italic">${c.issuer}</div>
+      </div>
+    </div>`;
+  }).join('');
+  makeWin({
+    id:'win-certs', title:'Mis Certs (una fortuna tirada)',
+    w:440, t:50, l:90, menu:MENU_STD,
+    body:`
+      <div class="npad" style="margin-bottom:8px;text-align:center;background:#fffbe6">
+        Sí las tengo. No las necesitaba.<br>
+        Pero aquí estamos. Gracias RH.
+      </div>
+      ${rows}`,
+    status:`${CERTS.length} certs | ~$$$$ gastados`
+  });
+}
+
+// ══════════════════════════════════════
+// CONTEXT MENU
+// ══════════════════════════════════════
+function trollWin(msg,title){
+  const {t,l}=jitter();
+  makeWin({id:'tr-'+Date.now(),title,w:280,t:t+60,l:l+60,
+    menu:[{l:'File',a:'noop'},{l:'Edit',a:'noop'},{l:'Help',a:'bsod'}],
+    body:`<div class="npad">${toH(msg)}</div>`,status:'Ln 1, Col 1 &nbsp; INS'});
+}
+
+function initCtx() {
+  const ctx=document.getElementById('ctx'), sub=document.getElementById('ctx-sub');
+  desktop().addEventListener('contextmenu',e=>{
+    // Don't show ctx if clicking on a window
+    if(e.target.closest('.win'))return;
+    e.preventDefault(); hideCtx();
+    ctx.style.display='block';
+    let x=e.clientX,y=e.clientY;
+    if(x+170>innerWidth)x=innerWidth-175;
+    if(y+180>innerHeight)y=innerHeight-185;
+    ctx.style.left=x+'px';ctx.style.top=y+'px';
+  });
+  const ni=ctx.querySelector('[data-a="new"]');
+  ni.addEventListener('mouseenter',()=>{
+    const r=ni.getBoundingClientRect();
+    sub.style.display='block';sub.style.left=(r.right-2)+'px';sub.style.top=r.top+'px';
+  });
+  ni.addEventListener('mouseleave',e=>{if(!sub.contains(e.relatedTarget))sub.style.display='none';});
+  sub.addEventListener('mouseleave',()=>sub.style.display='none');
+  ctx.addEventListener('click',e=>{
+    const item=e.target.closest('[data-a]');if(!item)return;hideCtx();
+    const a=item.dataset.a;
+    if(a==='refresh')trollWin(rand(TR_REFRESH),'Refresh');
+    else if(a==='help')showBSOD();
+    else if(a==='props')trollWin(rand(TR_PROPS),'Properties');
+  });
+  sub.addEventListener('click',e=>{
+    const item=e.target.closest('[data-s]');if(!item)return;hideCtx();
+    const s=item.dataset.s;
+    if(s==='folder')trollWin(rand(TR_FOLDER),'Folder');
+    else if(s==='textdoc')trollWin(rand(TR_DOC),'New Text Document.txt - Notepad');
+    else if(s==='shortcut')trollWin(rand(TR_SHORT),'Create Shortcut');
+  });
+  document.addEventListener('click',e=>{
+    if(!ctx.contains(e.target)&&!sub.contains(e.target))hideCtx();
+  });
+  function hideCtx(){ctx.style.display='none';sub.style.display='none';}
+}
+
+// ══════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════
+function updateClock(){
+  const n=new Date();
+  document.getElementById('taskbar-clock').textContent=
+    `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+}
+setInterval(updateClock,10000); updateClock();
+
+// ══════════════════════════════════════
+// START MENU
+// ══════════════════════════════════════
+function initStartMenu() {
+  const btn=document.getElementById('start-btn'), menu=document.getElementById('start-menu');
+  btn.addEventListener('click',e=>{
+    e.stopPropagation();
+    menu.style.display=menu.style.display==='block'?'none':'block';
+  });
+  document.addEventListener('click',e=>{if(!menu.contains(e.target)&&e.target!==btn)menu.style.display='none';});
+  menu.querySelectorAll('[data-sm]').forEach(item=>{
+    item.addEventListener('click',()=>{
+      menu.style.display='none';
+      dispatch(item.dataset.sm);
+    });
+  });
+}
+
+function dispatch(a) {
+  if(a==='about')          openAbout();
+  else if(a==='profile')   openProfile();
+  else if(a==='blog')      openBlog();
+  else if(a==='bugbounty') openBugBounty();
+  else if(a==='certs')     openCerts();
+  else if(a==='ssrf')      window.location.href='SSRF.html';
+  else if(a==='login')     window.location.href='login.html';
+  else if(a==='help')      showBSOD();
+  else if(a==='reboot')    {document.body.style.background='#0000ff';setTimeout(()=>location.reload(),600);}
+}
+
+// ══════════════════════════════════════
+// DESKTOP ICONS
+// ══════════════════════════════════════
+function initIcons() {
+  document.querySelectorAll('.dicon').forEach(icon=>{
+    icon.addEventListener('click',()=>{
+      document.querySelectorAll('.dicon').forEach(i=>i.classList.remove('sel'));
+      icon.classList.add('sel');
+    });
+    icon.addEventListener('dblclick',()=>dispatch(icon.dataset.a));
+  });
+}
+
+// ══════════════════════════════════════
+// MONKEY
+// ══════════════════════════════════════
+function initMonkey() {
+  const m=document.getElementById('monkey');if(!m)return;
+  let x=-70,dir=1; m.style.left=x+'px';
+  setInterval(()=>{
+    x+=1.2*dir; m.style.left=x+'px';
+    if(x>innerWidth+10){dir=-1;m.style.transform='scaleX(-1)';}
+    if(x<-70){dir=1;m.style.transform='scaleX(1)';}
+  },16);
+}
+
+// ══════════════════════════════════════
+// CHARACTER
+// ══════════════════════════════════════
+let charIdx=0;
+function charTalk(){
+  const bubble=document.getElementById('char-bubble');
+  const line=CHAR_LINES[charIdx%CHAR_LINES.length]; charIdx++;
+  bubble.style.display='block'; bubble.innerHTML=toH(line);
+  clearTimeout(charTalk._t);
+  charTalk._t=setTimeout(()=>bubble.style.display='none',2600);
+  const ch=document.getElementById('character');
+  ch.style.transform='scale(1.15)';
+  setTimeout(()=>ch.style.transform='',200);
+}
+
+// ══════════════════════════════════════
+// RANDOM WARNINGS
+// ══════════════════════════════════════
+function spawnWarning(){
+  makeWin({id:'warn-'+Date.now(),title:'Warning',w:240,
+    t:Math.random()*(innerHeight-200),
+    l:Math.random()*(innerWidth-260),
+    body:`<p style="text-align:center;padding:4px">You shouldn't be here!</p>`});
+}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+function initAll(){
+  initCtx();
+  initStartMenu();
+  initIcons();
+  initMonkey();
+  setTimeout(openAbout,400);
+  setTimeout(spawnWarning,9000);
+  setTimeout(spawnWarning,17000);
+}
+</script>
+</body>
+</html>
