@@ -395,7 +395,6 @@
   <div class="ci" data-a="refresh" style="padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;color:#000;position:relative" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'">Refresh</div>
   <div class="ci sub" data-a="new" style="padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;color:#000;position:relative" onmouseover="this.style.background='#000080';this.style.color='#fff';showCtxSub(this)" onmouseout="this.style.background='';this.style.color='#000'">New ▶</div>
   <div style="height:1px;background:#888;margin:2px 4px"></div>
-  <div class="ci" data-a="help" style="padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;color:#000" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'">Help</div>
   <div style="height:1px;background:#888;margin:2px 4px"></div>
   <div class="ci" data-a="props" style="padding:5px 28px 5px 12px;font-size:9px;cursor:pointer;color:#000" onmouseover="this.style.background='#000080';this.style.color='#fff'" onmouseout="this.style.background='';this.style.color='#000'">Properties</div>
 </div>
@@ -464,18 +463,6 @@ document.addEventListener('contextmenu', e => {
   ctx.style.top  = y + 'px';
 });
 
-document.getElementById('ctx').addEventListener('click', e => {
-  const a = e.target.dataset.a;
-  if(!a) return;
-  hideCtx();
-  if(a==='refresh') ctxTrollWin(ctxRand(TR_REFRESH), 'Refresh');
-  else if(a==='help')  {
-    // Reutiliza tu BSOD si existe, si no abre una ventana troll
-    if(typeof showBSOD === 'function') showBSOD();
-    else ctxTrollWin("A fatal exception\nhas occurred.\n\nPress ESC to recover.\n\n(just kidding)", 'Help');
-  }
-  else if(a==='props') ctxTrollWin(ctxRand(TR_PROPS), 'Properties');
-});
 
 document.getElementById('ctx-sub').addEventListener('mouseleave', hideCtx);
 
